@@ -1,0 +1,11 @@
+{
+    "type": "machine",
+    "setting_id": "GM001_BSRC_BS3DP400PRO_02",
+    "name": "BSRC BS3DP 400PRO 0.2 nozzle",
+    "from": "system",
+    "instantiation": "true",
+    "inherits": "BSRC BS3DP 400PRO 0.4 nozzle",
+    "nozzle_diameter": "0.2",
+    "printer_variant": "0.2",
+    "default_print_profile": "BSRC 0.20mm Quality @BS3DP400PRO"
+}

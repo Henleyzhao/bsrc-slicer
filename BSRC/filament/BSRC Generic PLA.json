@@ -1,0 +1,69 @@
+{
+    "type": "filament",
+    "setting_id": "GFB98_BSRC_PLA_00",
+    "name": "BSRC Generic PLA",
+    "from": "system",
+    "instantiation": "true",
+    "vendor": "BSRC",
+    "filament_vendor": "Generic",
+    "filament_type": [
+        "PLA"
+    ],
+    "filament_colour": [
+        "#00AE42"
+    ],
+    "filament_diameter": [
+        "1.75"
+    ],
+    "filament_density": [
+        "1.24"
+    ],
+    "nozzle_temperature": [
+        "220"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "220"
+    ],
+    "nozzle_temperature_range_low": [
+        "190"
+    ],
+    "nozzle_temperature_range_high": [
+        "240"
+    ],
+    "bed_temperature": [
+        "55"
+    ],
+    "bed_temperature_initial_layer": [
+        "60"
+    ],
+    "fan_cooling_layer_time": [
+        "10"
+    ],
+    "fan_max_speed": [
+        "100"
+    ],
+    "fan_min_speed": [
+        "20"
+    ],
+    "slow_down_layer_time": [
+        "5"
+    ],
+    "slow_down_min_speed": [
+        "10"
+    ],
+    "filament_max_volumetric_speed": [
+        "15"
+    ],
+    "reduce_fan_stop_start_freq": [
+        "1"
+    ],
+    "full_fan_speed_layer": [
+        "3"
+    ],
+    "compatible_printers": [
+        "BSRC BS3DP 400PRO 0.2 nozzle",
+        "BSRC BS3DP 400PRO 0.4 nozzle",
+        "BSRC BS3DP 400PRO 0.6 nozzle",
+        "BSRC BS3DP 400PRO 0.8 nozzle"
+    ]
+}

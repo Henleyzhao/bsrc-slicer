@@ -1,0 +1,169 @@
+name: Build BSRC Slicer
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-2022
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout BSRC repo
+        uses: actions/checkout@v4
+        with:
+          path: bsrc_repo
+
+      - name: Clone OrcaSlicer source
+        shell: cmd
+        run: git clone --depth=1 https://github.com/OrcaSlicer/OrcaSlicer.git C:\OrcaSlicer
+
+      - name: Apply BSRC branding
+        shell: powershell
+        run: |
+          $src = "C:\OrcaSlicer"
+          $cmake = Get-Content "$src\CMakeLists.txt" -Raw
+          $cmake = $cmake -replace 'set\(SLIC3R_APP_NAME\s+"OrcaSlicer"\)', 'set(SLIC3R_APP_NAME "BSRC Slicer")'
+          Set-Content "$src\CMakeLists.txt" $cmake -Encoding UTF8
+          @("$src\src\slic3r\GUI\MainFrame.cpp",
+            "$src\src\slic3r\GUI\AboutDialog.cpp",
+            "$src\src\slic3r\GUI\ConfigWizard.cpp") | ForEach-Object {
+            if (Test-Path $_) {
+              $c = (Get-Content $_ -Raw) -replace 'OrcaSlicer','BSRC Slicer' -replace 'Orca Slicer','BSRC Slicer'
+              Set-Content $_ $c -Encoding UTF8
+            }
+          }
+          Write-Host "✅ Branding applied"
+
+      - name: Copy BSRC profiles
+        shell: powershell
+        run: |
+          $dest = "C:\OrcaSlicer\resources\profiles"
+          Copy-Item -Recurse -Force "$env:GITHUB_WORKSPACE\bsrc_repo\resources\profiles\BSRC" $dest
+          Copy-Item -Force "$env:GITHUB_WORKSPACE\bsrc_repo\resources\profiles\BSRC.json" $dest
+          Write-Host "✅ Profiles installed"
+
+      - name: Install NSIS
+        shell: cmd
+        run: choco install nsis -y --no-progress
+
+      - name: Build deps
+        shell: cmd
+        timeout-minutes: 180
+        run: |
+          mkdir C:\build\deps
+          cd C:\OrcaSlicer\deps
+          cmake -B C:\build\deps -G "Visual Studio 17 2022" -A x64 -DDEP_WX_GTK3=OFF
+          cmake --build C:\build\deps --config Release --parallel %NUMBER_OF_PROCESSORS%
+
+      - name: Configure project
+        shell: cmd
+        run: |
+          mkdir C:\build\slicer
+          cmake -B C:\build\slicer -S C:\OrcaSlicer ^
+            -G "Visual Studio 17 2022" -A x64 ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DSLIC3R_STATIC=1 ^
+            -DSLIC3R_PCH=0 ^
+            -DCMAKE_PREFIX_PATH="C:\build\deps\usr\local" ^
+            -DSLIC3R_APP_NAME="BSRC Slicer"
+
+      - name: Compile BSRC Slicer
+        shell: cmd
+        timeout-minutes: 120
+        run: cmake --build C:\build\slicer --config Release --parallel %NUMBER_OF_PROCESSORS%
+
+      - name: Create installer
+        shell: powershell
+        run: |
+          $releaseDir = "C:\build\slicer\src\Release"
+          $outDir = "C:\installer_output"
+          New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+          $nsi = @"
+!define APP_NAME      "BSRC Slicer"
+!define APP_VERSION   "5.0"
+!define APP_PUBLISHER "BSRC"
+!define INSTALL_DIR   "`$PROGRAMFILES64\BSRC Slicer"
+!define UNINSTALL_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\BsrcSlicer"
+!include "MUI2.nsh"
+Name "`${APP_NAME} `${APP_VERSION}"
+OutFile "$outDir\BSRC_Slicer_v5.0_Setup.exe"
+InstallDir "`${INSTALL_DIR}"
+RequestExecutionLevel admin
+ShowInstDetails show
+!define MUI_FINISHPAGE_RUN "`$INSTDIR\BSRC Slicer.exe"
+!define MUI_FINISHPAGE_RUN_TEXT "Launch BSRC Slicer"
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+!insertmacro MUI_PAGE_FINISH
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+!insertmacro MUI_LANGUAGE "English"
+!insertmacro MUI_LANGUAGE "SimpChinese"
+Section "Main" SecMain
+  SectionIn RO
+  SetOutPath "`$INSTDIR"
+  File /r "$releaseDir\*.*"
+  WriteRegStr HKLM "`${UNINSTALL_KEY}" "DisplayName"     "`${APP_NAME}"
+  WriteRegStr HKLM "`${UNINSTALL_KEY}" "DisplayVersion"  "`${APP_VERSION}"
+  WriteRegStr HKLM "`${UNINSTALL_KEY}" "Publisher"       "`${APP_PUBLISHER}"
+  WriteRegStr HKLM "`${UNINSTALL_KEY}" "InstallLocation" "`$INSTDIR"
+  WriteRegStr HKLM "`${UNINSTALL_KEY}" "UninstallString" '"`$INSTDIR\Uninstall.exe"'
+  WriteRegStr HKCR ".3mf\OpenWithProgids" "BsrcSlicer.3mf" ""
+  WriteRegStr HKCR ".stl\OpenWithProgids" "BsrcSlicer.stl" ""
+  WriteRegStr HKCR "BsrcSlicer.3mf\shell\open\command" "" '"`$INSTDIR\BSRC Slicer.exe" "%1"'
+  WriteRegStr HKCR "BsrcSlicer.stl\shell\open\command" "" '"`$INSTDIR\BSRC Slicer.exe" "%1"'
+  WriteUninstaller "`$INSTDIR\Uninstall.exe"
+SectionEnd
+Section "Desktop Shortcut"
+  CreateShortcut "`$DESKTOP\BSRC Slicer.lnk" "`$INSTDIR\BSRC Slicer.exe"
+SectionEnd
+Section "Start Menu"
+  CreateDirectory "`$SMPROGRAMS\BSRC Slicer"
+  CreateShortcut "`$SMPROGRAMS\BSRC Slicer\BSRC Slicer.lnk" "`$INSTDIR\BSRC Slicer.exe"
+  CreateShortcut "`$SMPROGRAMS\BSRC Slicer\Uninstall.lnk"   "`$INSTDIR\Uninstall.exe"
+SectionEnd
+Section "Uninstall"
+  RMDir /r "`$INSTDIR"
+  Delete "`$DESKTOP\BSRC Slicer.lnk"
+  RMDir /r "`$SMPROGRAMS\BSRC Slicer"
+  DeleteRegKey HKLM "`${UNINSTALL_KEY}"
+  DeleteRegKey HKCR "BsrcSlicer.3mf"
+  DeleteRegKey HKCR "BsrcSlicer.stl"
+SectionEnd
+"@
+          Set-Content "C:\build\installer.nsi" $nsi -Encoding UTF8
+          & "C:\Program Files (x86)\NSIS\makensis.exe" "C:\build\installer.nsi"
+          Write-Host "✅ Installer created"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BSRC_Slicer_v5.0_Windows_Setup
+          path: C:\installer_output\BSRC_Slicer_v5.0_Setup.exe
+          retention-days: 30
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v5.0
+          name: "BSRC Slicer v5.0"
+          body: |
+            ## BSRC Slicer v5.0
+            专为 **BSRC BS3DP 400PRO** 定制的切片软件
+
+            ### 下载安装
+            点击下方 `BSRC_Slicer_v5.0_Setup.exe` 下载，双击安装即可。
+
+            ### 内置配置
+            - 🖨 打印机：BSRC BS3DP 400PRO（0.2 / 0.4 / 0.6 / 0.8mm 喷嘴）
+            - 🧵 耗材：PLA / PETG / ABS / TPU
+            - ⚙️ 工艺：Standard / Quality / Draft
+          files: C:\installer_output\BSRC_Slicer_v5.0_Setup.exe
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

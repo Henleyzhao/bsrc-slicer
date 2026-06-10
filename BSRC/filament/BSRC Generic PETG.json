@@ -1,0 +1,69 @@
+{
+    "type": "filament",
+    "setting_id": "GFB98_BSRC_PETG_00",
+    "name": "BSRC Generic PETG",
+    "from": "system",
+    "instantiation": "true",
+    "vendor": "BSRC",
+    "filament_vendor": "Generic",
+    "filament_type": [
+        "PETG"
+    ],
+    "filament_colour": [
+        "#2255FF"
+    ],
+    "filament_diameter": [
+        "1.75"
+    ],
+    "filament_density": [
+        "1.27"
+    ],
+    "nozzle_temperature": [
+        "240"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "240"
+    ],
+    "nozzle_temperature_range_low": [
+        "220"
+    ],
+    "nozzle_temperature_range_high": [
+        "260"
+    ],
+    "bed_temperature": [
+        "70"
+    ],
+    "bed_temperature_initial_layer": [
+        "75"
+    ],
+    "fan_cooling_layer_time": [
+        "15"
+    ],
+    "fan_max_speed": [
+        "70"
+    ],
+    "fan_min_speed": [
+        "0"
+    ],
+    "slow_down_layer_time": [
+        "8"
+    ],
+    "slow_down_min_speed": [
+        "15"
+    ],
+    "filament_max_volumetric_speed": [
+        "12"
+    ],
+    "reduce_fan_stop_start_freq": [
+        "1"
+    ],
+    "full_fan_speed_layer": [
+        "5"
+    ],
+    "compatible_printers": [
+        "BSRC BS3DP 400PRO 0.2 nozzle",
+        "BSRC BS3DP 400PRO 0.4 nozzle",
+        "BSRC BS3DP 400PRO 0.6 nozzle",
+        "BSRC BS3DP 400PRO 0.8 nozzle"
+    ]
+}

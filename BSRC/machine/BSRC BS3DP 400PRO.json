@@ -1,0 +1,15 @@
+{
+    "type": "machine_model",
+    "name": "BSRC BS3DP 400PRO",
+    "vendor": "BSRC",
+    "machine_model_id": "BSRC_BS3DP400PRO",
+    "nozzle_diameter": "0.4",
+    "machine_tech": "FFF",
+    "family": "BSRC BS3DP",
+    "variants": [
+        { "name": "BSRC BS3DP 400PRO 0.2 nozzle", "sub_path": "machine/BSRC BS3DP 400PRO 0.2 nozzle.json" },
+        { "name": "BSRC BS3DP 400PRO 0.4 nozzle", "sub_path": "machine/BSRC BS3DP 400PRO 0.4 nozzle.json" },
+        { "name": "BSRC BS3DP 400PRO 0.6 nozzle", "sub_path": "machine/BSRC BS3DP 400PRO 0.6 nozzle.json" },
+        { "name": "BSRC BS3DP 400PRO 0.8 nozzle", "sub_path": "machine/BSRC BS3DP 400PRO 0.8 nozzle.json" }
+    ]
+}

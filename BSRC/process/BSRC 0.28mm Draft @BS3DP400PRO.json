@@ -1,0 +1,26 @@
+{
+    "type": "process",
+    "setting_id": "GP001_BSRC_0.28_DRAFT",
+    "name": "BSRC 0.28mm Draft @BS3DP400PRO",
+    "from": "system",
+    "instantiation": "true",
+    "inherits": "BSRC 0.20mm Standard @BS3DP400PRO",
+    "vendor": "BSRC",
+    "layer_height": "0.28",
+    "first_layer_height": "0.28",
+    "print_speed": "300",
+    "outer_wall_speed": "150",
+    "inner_wall_speed": "300",
+    "top_surface_speed": "150",
+    "initial_layer_speed": "40",
+    "travel_speed": "600",
+    "default_acceleration": "10000",
+    "outer_wall_acceleration": "5000",
+    "top_shell_layers": "3",
+    "bottom_shell_layers": "3",
+    "compatible_printers": [
+        "BSRC BS3DP 400PRO 0.4 nozzle",
+        "BSRC BS3DP 400PRO 0.6 nozzle",
+        "BSRC BS3DP 400PRO 0.8 nozzle"
+    ]
+}

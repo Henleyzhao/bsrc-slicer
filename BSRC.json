@@ -1,0 +1,19 @@
+{
+    "name": "BSRC",
+    "url": "",
+    "description": "BSRC 3D Printer - BS3DP 400PRO profiles",
+    "machine_list": [
+        { "model_id": "BSRC_BS3DP400PRO", "name": "BSRC BS3DP 400PRO", "sub_path": "machine/BSRC BS3DP 400PRO.json" }
+    ],
+    "filament_list": [
+        { "name": "BSRC Generic PLA",  "sub_path": "filament/BSRC Generic PLA.json"  },
+        { "name": "BSRC Generic PETG", "sub_path": "filament/BSRC Generic PETG.json" },
+        { "name": "BSRC Generic ABS",  "sub_path": "filament/BSRC Generic ABS.json"  },
+        { "name": "BSRC Generic TPU",  "sub_path": "filament/BSRC Generic TPU.json"  }
+    ],
+    "process_list": [
+        { "name": "BSRC 0.20mm Standard @BS3DP400PRO", "sub_path": "process/BSRC 0.20mm Standard @BS3DP400PRO.json" },
+        { "name": "BSRC 0.20mm Quality @BS3DP400PRO",  "sub_path": "process/BSRC 0.20mm Quality @BS3DP400PRO.json"  },
+        { "name": "BSRC 0.28mm Draft @BS3DP400PRO",    "sub_path": "process/BSRC 0.28mm Draft @BS3DP400PRO.json"    }
+    ]
+}

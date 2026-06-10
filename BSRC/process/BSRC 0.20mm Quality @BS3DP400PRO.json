@@ -1,0 +1,25 @@
+{
+    "type": "process",
+    "setting_id": "GP001_BSRC_0.20_QUAL",
+    "name": "BSRC 0.20mm Quality @BS3DP400PRO",
+    "from": "system",
+    "instantiation": "true",
+    "inherits": "BSRC 0.20mm Standard @BS3DP400PRO",
+    "vendor": "BSRC",
+    "layer_height": "0.2",
+    "print_speed": "150",
+    "outer_wall_speed": "60",
+    "inner_wall_speed": "150",
+    "top_surface_speed": "60",
+    "initial_layer_speed": "20",
+    "travel_speed": "400",
+    "default_acceleration": "5000",
+    "outer_wall_acceleration": "2000",
+    "wall_loops": "4",
+    "top_shell_layers": "5",
+    "bottom_shell_layers": "4",
+    "compatible_printers": [
+        "BSRC BS3DP 400PRO 0.2 nozzle",
+        "BSRC BS3DP 400PRO 0.4 nozzle"
+    ]
+}
